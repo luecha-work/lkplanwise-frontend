@@ -1,0 +1,59 @@
+:host {
+  display: flex;
+  text-rendering: optimizeLegibility;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+.menu-sidebar {
+  position: relative;
+  top: 0;
+  left: 0;
+  bottom: 0;
+  width: 256px;
+  z-index: 1001;
+  background: #ffffff;
+  box-shadow: 0 1px 4px rgba(0, 21, 41, 0.08);
+}
+
+.sidebar-trigger {
+  display: flex;
+  align-items: center;
+  height: 64px;
+  font-size: 20px;
+  cursor: pointer;
+  transition: all 0.3s, padding 0s;
+}
+
+.trigger:hover {
+  color: #1890ff;
+}
+
+.sidebar-logo {
+  display: flex;
+  position: relative;
+  height: 64px;
+  overflow: hidden;
+  line-height: 64px;
+  background: #ffffff;
+  transition: all 0.3s;
+  align-items: center;
+}
+
+.sidebar-logo.expanded {
+  align-items: center;
+  justify-content: start;
+  padding-left: 24px;
+}
+
+.sidebar-logo.collapsed {
+  align-items: center;
+  justify-content: center;
+}
+
+.sidebar-logo a {
+  display: inline-block;
+  font-size: 20px;
+  font-weight: 600;
+  color: black;
+}

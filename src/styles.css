@@ -1,1 +1,16 @@
-/* You can add global styles to this file, and also import other style files */
+@import "tailwindcss";
+/* @tailwind base;
+@tailwind components;
+@tailwind utilities; */
+
+body {
+  font-family: "Poppins", sans-serif;
+  background-color: #f0f2f5;
+  color: #707186;
+  margin: 0;
+  padding: 0;
+}
+
+/* .primary-text {
+  @apply text-primary font-semibold;
+} */
