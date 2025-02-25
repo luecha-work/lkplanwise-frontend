@@ -9,9 +9,4 @@ import { NzMenuModule } from 'ng-zorro-antd/menu';
   templateUrl: './header.component.html',
   styleUrl: './header.component.css',
 })
-export class HeaderComponent {
-  isCollapsed = false;
-  toggleCollapse(): void {
-    this.isCollapsed = !this.isCollapsed;
-  }
-}
+export class HeaderComponent {}

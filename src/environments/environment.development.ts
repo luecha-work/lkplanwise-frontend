@@ -12,5 +12,5 @@ export const environment = {
     api: false,
     url: './assets/params/json/crud/',
   },
-  backendAdminUrl: 'http://localhost:9000',
+  backendLKPlanWiseUrl: 'http://localhost:8080',
 };

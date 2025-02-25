@@ -1,6 +1,6 @@
-<nz-layout class="app-layout">
+<nz-layout class="app-layout" *ngIf="isLoggedIn; else loginPage">
   <app-sidebar></app-sidebar>
-  <nz-layout class="content-wrapper">
+  <nz-layout>
     <app-header></app-header>
     <nz-content>
       <div class="inner-content">
@@ -10,3 +10,8 @@
     <app-footer />
   </nz-layout>
 </nz-layout>
+
+<!-- If not found token go to login page -->
+<ng-template #loginPage>
+  <router-outlet></router-outlet>
+</ng-template>
