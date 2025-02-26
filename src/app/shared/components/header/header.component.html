@@ -1,14 +1,98 @@
 <nz-header>
-    <div class="app-header">
-      <div class="header-icons">
-        <i nz-icon nzType="moon" nzTheme="outline"></i>
-        <nz-badge [nzCount]="5">
-          <i nz-icon nzType="bell" nzTheme="outline"></i>
-        </nz-badge>
-        <i nz-icon nzType="setting" nzTheme="outline"></i>
-        <i nz-icon nzType="clock-circle" nzTheme="outline"></i>
-        <nz-avatar [nzSrc]="'assets/avatar.jpg'" nzShape="circle"></nz-avatar>
-      </div>
+    <div class="header-wrapper">
+        <!-- เพิ่มส่วนของ Notification Bell -->
+        <div class="notification-container">
+            <a nz-dropdown [nzDropdownMenu]="notificationMenu" nzTrigger="click" nzPlacement="bottomRight"
+                (click)="$event.preventDefault()" tabindex="0" (keydown.enter)="$event.preventDefault()">
+                <nz-badge [nzCount]="unreadCount">
+                    <i nz-icon nzType="bell" nzTheme="outline" class="notification-icon"></i>
+                </nz-badge>
+            </a>
+
+            <nz-dropdown-menu style="margin-top: 20px;" #notificationMenu="nzDropdownMenu">
+                <div class="notification-dropdown">
+                    <div class="notification-header">
+                        <h3>Notifications</h3>
+                        <a (click)="clearAll()" (keydown.enter)="clearAll()" tabindex="0">Clear All</a>
+                    </div>
+
+                    <nz-tabset>
+                        <nz-tab nzTitle="All">
+                            <div class="notification-list">
+                                <ng-container *ngFor="let notification of notifications">
+                                    <div class="notification-item">
+                                        <div class="notification-avatar">
+                                            <ng-container *ngIf="notification.avatar; else avatarTemplate">
+                                                <nz-avatar [nzSrc]="notification.avatar"></nz-avatar>
+                                            </ng-container>
+                                            <ng-template #avatarTemplate>
+                                                <ng-container *ngIf="notification.avatarText; else iconTemplate">
+                                                    <nz-avatar [nzText]="notification.avatarText"
+                                                        [ngStyle]="{'background-color': notification.avatarColor || '#f56a00'}"></nz-avatar>
+                                                </ng-container>
+                                            </ng-template>
+                                            <ng-template #iconTemplate>
+                                                <nz-avatar nzIcon="mail"></nz-avatar>
+                                            </ng-template>
+                                        </div>
+                                        <div class="notification-content">
+                                            <div class="notification-sender" *ngIf="notification.sender">
+                                                <span>{{ notification.sender }}</span>
+                                            </div>
+                                            <div class="notification-message">
+                                                {{ notification.content }}
+                                            </div>
+                                        </div>
+                                        <div class="notification-count">
+                                            {{ notification.count }}k
+                                        </div>
+                                    </div>
+                                </ng-container>
+                            </div>
+                        </nz-tab>
+                        <nz-tab nzTitle="1M">
+                            <!-- แสดงการแจ้งเตือนในช่วง 1 เดือน -->
+                        </nz-tab>
+                        <nz-tab nzTitle="6M">
+                            <!-- แสดงการแจ้งเตือนในช่วง 6 เดือน -->
+                        </nz-tab>
+                        <nz-tab nzTitle="1Y">
+                            <!-- แสดงการแจ้งเตือนในช่วง 1 ปี -->
+                        </nz-tab>
+                    </nz-tabset>
+
+                    <div class="notification-footer">
+                        <button nz-button nzType="primary" nzBlock (click)="viewAllNotifications()">
+                            View All Notification
+                            <i nz-icon nzType="arrow-right" nzTheme="outline"></i>
+                        </button>
+                    </div>
+                </div>
+            </nz-dropdown-menu>
+        </div>
+
+        <div class="user-container">
+            <a nz-dropdown [nzDropdownMenu]="menu" nzTrigger="click">
+                <nz-avatar nzIcon="user" style="background-color: #87d068;"></nz-avatar>
+            </a>
+            <nz-dropdown-menu #menu="nzDropdownMenu">
+                <ul style="margin-top: 20px;" nz-menu>
+                    <h4>Head</h4>
+                    <li nz-menu-item>
+                        <i nz-icon nzType="user" nzTheme="outline"></i>
+                        โปรไฟล์ผู้ใช้
+                    </li>
+                    <li nz-menu-item>
+                        <i nz-icon nzType="setting" nzTheme="outline"></i>
+                        ตั้งค่า
+                    </li>
+                    <li nz-menu-divider></li>
+                    <li nz-menu-item>
+                        <i nz-icon nzType="logout" nzTheme="outline"></i>
+                        ออกจากระบบ
+                    </li>
+                </ul>
+            </nz-dropdown-menu>
+        </div>
     </div>
-  </nz-header>
-  
+</nz-header>
