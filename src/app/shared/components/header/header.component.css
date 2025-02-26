@@ -1,9 +1,9 @@
-:host {
+/* :host {
   display: flex;
   text-rendering: optimizeLegibility;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
-}
+} */
 
 nz-header {
   padding: 0;
@@ -19,6 +19,24 @@ nz-header {
   z-index: 1000;
 }
 
-.trigger:hover {
-  color: #1890ff;
+.header-icons {
+  display: flex;
+  gap: 20px;
+  align-items: center;
+}
+
+i[nz-icon] {
+  font-size: 20px;
+  cursor: pointer;
+  color: #595959;
+}
+
+nz-badge {
+  cursor: pointer;
+}
+
+nz-avatar {
+  width: 32px;
+  height: 32px;
+  cursor: pointer;
 }
