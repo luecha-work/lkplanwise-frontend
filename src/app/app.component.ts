@@ -1,4 +1,6 @@
-import { STORAGE_ACCESS_TOKEN } from '@/app/shared/constants/storage-constant';
+import { selectIsLoggedIn } from './store/auth/auth.selectors';
+import { logout, login } from './store/auth/auth.actions';
+import { SessionStorageService } from '@/app/shared/services/session_storage.service';
 import { CommonModule } from '@angular/common';
 import { Component, OnInit, Inject, PLATFORM_ID } from '@angular/core';
 import { Router, RouterOutlet } from '@angular/router';
@@ -10,6 +12,8 @@ import { HeaderComponent } from './shared/components/header/header.component';
 import { SidebarComponent } from './shared/components/sidebar/sidebar.component';
 import { isPlatformBrowser } from '@angular/common';
 import { LoadingComponent } from "./shared/components/loading/loading.component";
+import { Observable } from 'rxjs';
+import { Store } from '@ngrx/store';
 
 @Component({
     selector: 'app-root',
@@ -24,38 +28,47 @@ import { LoadingComponent } from "./shared/components/loading/loading.component"
         FooterComponent,
         LoadingComponent
     ],
+    providers: [SessionStorageService],
     templateUrl: './app.component.html',
     styleUrl: './app.component.css',
 })
 export class AppComponent implements OnInit {
-    constructor(private router: Router, @Inject(PLATFORM_ID) private platformId: object) { }
+    constructor(
+        private router: Router,
+        @Inject(PLATFORM_ID) private platformId: object,
+        private sessionStorageService: SessionStorageService,
+        private store: Store
+    ) {
+        this.isLoggedIn$ = this.store.select(selectIsLoggedIn);
+    }
 
-    isLoggedIn: boolean = false;
+    isLoggedIn$: Observable<boolean>;
     isLoading: boolean = true;
 
     ngOnInit(): void {
+        this.isLoggedIn$.subscribe(isLoggedIn => {
+            console.log('isLoggedIn value:', isLoggedIn);
+        });
+        
         if (isPlatformBrowser(this.platformId)) {
             this.checkToken();
-            // window.addEventListener('storage', () => {
-            //     this.checkToken();
-            // });
         }
     }
 
     private checkToken(): void {
-        this.isLoading = true; // เริ่มโหลด
-        setTimeout(() => { // จำลองโหลดข้อมูลจริง (เช่น จาก API)
+        this.isLoading = true;
+        setTimeout(() => {
             if (typeof localStorage !== 'undefined') {
-                const token = localStorage.getItem(STORAGE_ACCESS_TOKEN);
+                const token = this.sessionStorageService.getAccessToken();
 
                 if (token) {
-                    this.isLoggedIn = true;
+                    this.store.dispatch(login());
                 } else {
-                    this.isLoggedIn = false;
+                    this.store.dispatch(logout());
                     this.router.navigate(['/login']);
                 }
-                this.isLoading = false; // หยุดโหลดเมื่อเช็คเสร็จ
+                this.isLoading = false;
             }
-        }, 500); // จำลองดีเลย์ครึ่งวินาที
+        }, 1000);
     }
 }

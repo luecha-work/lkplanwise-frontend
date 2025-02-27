@@ -1,9 +1,9 @@
 <ng-container *ngIf="isLoading; else mainContent">
-  <app-loading></app-loading> <!-- แสดงหน้า Loading -->
+  <app-loading></app-loading>
 </ng-container>
 
 <ng-template #mainContent>
-  <nz-layout class="main-layout" *ngIf="isLoggedIn; else loginPage">
+  <nz-layout class="main-layout" *ngIf="isLoggedIn$ | async; else loginPage">
     <app-sidebar></app-sidebar>
     <nz-layout>
       <app-header></app-header>
@@ -16,7 +16,6 @@
     </nz-layout>
   </nz-layout>
 
-  <!-- If not found token go to login page -->
   <ng-template #loginPage>
     <router-outlet></router-outlet>
   </ng-template>

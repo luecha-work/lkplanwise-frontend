@@ -1,7 +1,6 @@
-import { STORAGE_ACCESS_TOKEN, STORAGE_REFRESH_TOKEN } from '@/app/shared/constants/storage-constant';
 import { LoginResponse } from '@/app/shared/models/auth.model';
-import { AuthService } from '@/app/shared/services/auth.service';
-import { Component } from '@angular/core';
+import { AuthService } from '@/app/api/auth-api.service';
+import { Component, OnInit } from '@angular/core';
 import {
     FormBuilder,
     FormGroup,
@@ -21,6 +20,9 @@ import { NzIconModule } from 'ng-zorro-antd/icon';
 import { NzImageModule } from 'ng-zorro-antd/image';
 import { NzInputModule } from 'ng-zorro-antd/input';
 import { NzLayoutModule } from 'ng-zorro-antd/layout';
+import { SessionStorageService } from '@/app/shared/services/session_storage.service';
+import { Store } from '@ngrx/store';
+import { login } from '@/app/store/auth/auth.actions';
 
 @Component({
     selector: 'app-login',
@@ -39,15 +41,22 @@ import { NzLayoutModule } from 'ng-zorro-antd/layout';
         ReactiveFormsModule,
         RouterLink,
     ],
+    providers: [SessionStorageService],
     templateUrl: './login.component.html',
     styleUrls: ['./login.component.css'],
     standalone: true,
 })
-export class LoginComponent {
+export class LoginComponent implements OnInit {
     loginForm: FormGroup;
     isPasswordVisible = true;
 
-    constructor(private fb: FormBuilder, private router: Router, private authService: AuthService) {
+    constructor(
+        private fb: FormBuilder,
+        private router: Router,
+        private authService: AuthService,
+        private sessionStorageService: SessionStorageService,
+        private store: Store
+    ) {
         this.loginForm = this.fb.group({
             email: ['', [Validators.required, Validators.email]],
             password: ['', [Validators.required]],
@@ -55,13 +64,19 @@ export class LoginComponent {
         });
     }
 
-    async onSubmit(): Promise<void> {
+    ngOnInit(): void {
+        this.headerLoginForm()
+    }
+
+    onSubmit(): void {
         if (this.loginForm.valid) {
             const { email, password } = this.loginForm.value;
             this.authService.login(email, password).subscribe({
-                next: async (loginResponse: LoginResponse) => {
+                next: (loginResponse: LoginResponse) => {
                     if (loginResponse) {
-                        await this.saveTokens(loginResponse.access_token, loginResponse.refresh_token);
+                        // console.log(`Login response: ${JSON.stringify(loginResponse)}`);
+                        this.saveTokens(loginResponse.access_token, loginResponse.refresh_token);
+                        this.store.dispatch(login());
                     }
                     console.log('Login successful');
                     this.router.navigate(['/']).then(() => {
@@ -72,16 +87,32 @@ export class LoginComponent {
                     console.error('Login failed', error);
                 }
             });
+        } else {
+            Object.values(this.loginForm.controls).forEach(control => {
+                if (control.invalid) {
+                    control.markAsDirty();
+                    control.updateValueAndValidity({ onlySelf: true });
+                }
+            });
         }
     }
 
+    headerLoginForm(): void {
+        const savedCredentials = this.sessionStorageService.getCredentials();
+        
+        if (savedCredentials && savedCredentials.remember) {
+            this.loginForm.patchValue({
+                email: savedCredentials.email,
+                password: savedCredentials.password,
+                remember: savedCredentials.remember
+            });
+        }
+    }
 
-    async saveTokens(accessToken: string, refreshToken: string): Promise<void> {
+    saveTokens(accessToken: string, refreshToken: string): void {
         const { email, password, remember } = this.loginForm.value;
-        localStorage.setItem(STORAGE_ACCESS_TOKEN, accessToken);
-        localStorage.setItem(STORAGE_REFRESH_TOKEN, refreshToken);
-        localStorage.setItem("email", email);
-        localStorage.setItem("password", password);
-        localStorage.setItem("remember", remember);
+
+        this.sessionStorageService.saveTokens(accessToken, refreshToken);
+        this.sessionStorageService.saveCredentials(email, password, remember);
     }
 }

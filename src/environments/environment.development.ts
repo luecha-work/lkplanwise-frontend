@@ -13,4 +13,5 @@ export const environment = {
     url: './assets/params/json/crud/',
   },
   backendLKPlanWiseUrl: 'http://localhost:8080',
+  encryptionKey: 'KzvBVBWgmczUSty1SujwnmdDwQRdsl60',
 };

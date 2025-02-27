@@ -1,22 +1,22 @@
 <nz-header>
     <div class="header-wrapper">
-        <!-- เพิ่มส่วนของ Notification Bell -->
         <div class="notification-container">
             <a nz-dropdown [nzDropdownMenu]="notificationMenu" nzTrigger="click" nzPlacement="bottomRight"
                 (click)="$event.preventDefault()" tabindex="0" (keydown.enter)="$event.preventDefault()">
-                <nz-badge [nzCount]="unreadCount">
-                    <i nz-icon nzType="bell" nzTheme="outline" class="notification-icon"></i>
+                <nz-badge style="display: flex;" [nzCount]="unreadCount">
+                    <i nz-icon nzType="bell" nzTheme="outline" class="header-icon"></i>
+                    <!-- <nz-avatar  nzIcon="bell" nzTheme="outline"></nz-avatar> -->
                 </nz-badge>
             </a>
 
-            <nz-dropdown-menu style="margin-top: 20px;" #notificationMenu="nzDropdownMenu">
+            <nz-dropdown-menu #notificationMenu="nzDropdownMenu">
                 <div class="notification-dropdown">
                     <div class="notification-header">
                         <h3>Notifications</h3>
-                        <a (click)="clearAll()" (keydown.enter)="clearAll()" tabindex="0">Clear All</a>
+                        <!-- <a (click)="clearAll()" (keydown.enter)="clearAll()" tabindex="0">Clear All</a> -->
                     </div>
 
-                    <nz-tabset>
+                    <!-- <nz-tabset>
                         <nz-tab nzTitle="All">
                             <div class="notification-list">
                                 <ng-container *ngFor="let notification of notifications">
@@ -51,15 +51,12 @@
                             </div>
                         </nz-tab>
                         <nz-tab nzTitle="1M">
-                            <!-- แสดงการแจ้งเตือนในช่วง 1 เดือน -->
                         </nz-tab>
                         <nz-tab nzTitle="6M">
-                            <!-- แสดงการแจ้งเตือนในช่วง 6 เดือน -->
                         </nz-tab>
                         <nz-tab nzTitle="1Y">
-                            <!-- แสดงการแจ้งเตือนในช่วง 1 ปี -->
                         </nz-tab>
-                    </nz-tabset>
+                    </nz-tabset> -->
 
                     <div class="notification-footer">
                         <button nz-button nzType="primary" nzBlock (click)="viewAllNotifications()">
@@ -73,25 +70,34 @@
 
         <div class="user-container">
             <a nz-dropdown [nzDropdownMenu]="menu" nzTrigger="click">
-                <nz-avatar nzIcon="user" nzTheme="outline" class="notification-icon"></nz-avatar>
+                <nz-avatar nzIcon="user" nzSrc="//zos.alipayobjects.com/rmsportal/ODTLcjxAfvqbxHnVXCYX.png"
+                    nzTheme="outline" nzSize="large"></nz-avatar>
             </a>
+
             <nz-dropdown-menu #menu="nzDropdownMenu">
-                <ul style="margin-top: 20px;" nz-menu>
-                    <h4>Head</h4>
-                    <li nz-menu-item>
-                        <i nz-icon nzType="user" nzTheme="outline"></i>
-                        โปรไฟล์ผู้ใช้
-                    </li>
-                    <li nz-menu-item>
-                        <i nz-icon nzType="setting" nzTheme="outline"></i>
-                        ตั้งค่า
-                    </li>
-                    <li nz-menu-divider></li>
-                    <li nz-menu-item>
-                        <i nz-icon nzType="logout" nzTheme="outline"></i>
-                        ออกจากระบบ
-                    </li>
-                </ul>
+                <div style="width: 200px;">
+                    <ul style="margin-top: 20px;" nz-menu>
+                        <h5 style="margin: 12px">Firstname Lastname</h5>
+                        <li nz-menu-divider></li>
+                        <li nz-menu-item>
+                            <i nz-icon nzType="user" nzTheme="outline"></i>
+                            Profile
+                        </li>
+                        <li nz-menu-item>
+                            <i nz-icon nzType="user" nzTheme="outline"></i>
+                            Language
+                        </li>
+                        <li nz-menu-item>
+                            <i nz-icon nzType="setting" nzTheme="outline"></i>
+                            Settings
+                        </li>
+                        <li nz-menu-divider></li>
+                        <li nz-menu-item (click)="logout()" (keydown.enter)="logout()" tabindex="0">
+                            <i nz-icon nzType="logout" nzTheme="outline"></i>
+                            Logout
+                        </li>
+                    </ul>
+                </div>
             </nz-dropdown-menu>
         </div>
     </div>

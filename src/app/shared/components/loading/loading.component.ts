@@ -1,11 +1,15 @@
 import { Component } from '@angular/core';
 
+import { NzIconModule } from 'ng-zorro-antd/icon';
+import { NzSpinModule } from 'ng-zorro-antd/spin';
+
 @Component({
     selector: 'app-loading',
-    imports: [],
+    imports: [NzIconModule, NzSpinModule],
     template: `
     <div class="loading-container">
-      <h1 class="text-red-500">Loading...</h1>
+      <ng-template #indicatorTemplate><nz-icon nzType="loading" /></ng-template>
+      <nz-spin nzSimple [nzIndicator]="indicatorTemplate"></nz-spin>
     </div>
   `,
     styles: [`
@@ -25,6 +29,10 @@ import { Component } from '@angular/core';
         width: 100%;
         background-color: #f5f5f5;
         font-size: 24px;
+      }
+
+      nz-icon {
+        font-size: 70px;
       }
     `]
 

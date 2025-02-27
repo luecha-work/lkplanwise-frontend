@@ -1,3 +1,4 @@
+import { SessionStorageService } from '@/app/shared/services/session_storage.service';
 import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { NzLayoutModule } from 'ng-zorro-antd/layout';
@@ -7,6 +8,10 @@ import { NzButtonModule } from 'ng-zorro-antd/button';
 import { NzDropDownModule } from 'ng-zorro-antd/dropdown';
 import { NzIconModule } from 'ng-zorro-antd/icon';
 import { NzTabsModule } from 'ng-zorro-antd/tabs';
+import { Store } from '@ngrx/store';
+import { logout } from '@/app/store/auth/auth.actions';
+import { Router } from '@angular/router';
+import { AuthService } from '@/app/api/auth-api.service';
 
 @Component({
     selector: 'app-header',
@@ -21,10 +26,18 @@ import { NzTabsModule } from 'ng-zorro-antd/tabs';
         NzDropDownModule,
         NzTabsModule
     ],
+    providers: [SessionStorageService],
     templateUrl: './header.component.html',
     styleUrl: './header.component.css',
 })
 export class HeaderComponent implements OnInit, Extracted, Extracted {
+    constructor(
+        private router: Router,
+        private sessionStorageService: SessionStorageService,
+        private authService: AuthService,
+        private store: Store
+    ) { }
+
     unreadCount = 3;
     notifications = [
         {
@@ -77,6 +90,22 @@ export class HeaderComponent implements OnInit, Extracted, Extracted {
         }));
         this.unreadCount = 0;
     }
+
+    logout(): void {
+        try {
+            const accessToken: string = this.sessionStorageService.getAccessToken() ?? '';
+            this.authService.logout(accessToken).subscribe(() => {
+                this.sessionStorageService.logout();
+                this.store.dispatch(logout());
+                this.router.navigate(['/login']);
+            });
+        } catch (error) {
+            console.log('Error logging out:', error);
+        }
+    }
+
+
+
 
     viewAllNotifications(): void {
         // นำทางไปยังหน้าแสดงรายการแจ้งเตือนทั้งหมด
